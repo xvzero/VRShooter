@@ -32,41 +32,32 @@ public class alienScript : MonoBehaviour
         agent.destination = gameObject.transform.position;
         //stop the walking animation and play the falling back animation
         GetComponent<Animation>().Stop();
-
-        foreach (AnimationState state in GetComponent<Animation>())
-        {
-            state.speed = -1.0F;
-            state.time = state.length;
-        }
-
-        GetComponent<Animation>().Play("Attack");
+        GetComponent<Animation>().Play("Idle");
         //destroy this alien in six seconds.
         Destroy(gameObject, 3);
         //instantiate a new alien
         GameObject alien = Instantiate(Resources.Load("Alien", typeof(GameObject))) as GameObject;
 
         //set the coordinates for a new vector 3
-        float randomX = randomizer();
-        float randomY = randomizer();
-        float constantZ = .01f;
+        float randomX = randomPos();
+        float constantY = .01f;
+        float randomZ = randomPos();
         //set the aliens position equal to these new coordinates
-        alien.transform.position = new Vector3(randomX, randomY, constantZ);
+        alien.transform.position = new Vector3(randomX, constantY, randomZ);
 
         //if the alien gets positioned less than or equal to 3 scene units away from the camera we won't be able to shoot it
         //so keep repositioning the alien until it is greater than 3 scene units away. 
-        while (Vector3.Distance(alien.transform.position, Camera.main.transform.position) <= 3)
+        while (Vector3.Distance(alien.transform.position, Camera.main.transform.position) <= 5)
         {
-            randomX = randomizer();
-            randomY = randomizer();
+            randomX = randomPos();
+            randomZ = randomPos();
 
-            alien.transform.position = new Vector3(randomX, randomY, constantZ);
+            alien.transform.position = new Vector3(randomX, constantY, randomZ);
         }
-
     }
 
-    float randomizer()
+    float randomPos()
     {
-        return (UnityEngine.Random.Range(0, 2) == 0 ? -1 : 1) * UnityEngine.Random.Range(10f, 15f);
+        return (UnityEngine.Random.Range(0, 2) == 0 ? -1f : 1f) * UnityEngine.Random.Range(10f, 15f);
     }
-
 }
